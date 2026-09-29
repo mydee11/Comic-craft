@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ comic.title }} - ComicCraft
+{% endblock %}
+
+
+{% block content %}
+
+<section class="comic-header">
+
+    <div>
+
+        <div class="hero-badge">
+            {{ comic.genre }}
+        </div>
+
+        <h1>
+            {{ comic.title }}
+        </h1>
+
+        <p>
+            {{ comic.summary }}
+        </p>
+
+    </div>
+
+
+    <div class="download-buttons">
+
+        <a
+            href="/download/html/{{ comic_id }}"
+            class="secondary-button"
+            download
+        >
+            Download HTML
+        </a>
+
+        <a
+            href="/download/json/{{ comic_id }}"
+            class="secondary-button"
+            download
+        >
+            Download JSON
+        </a>
+
+    </div>
+
+</section>
+
+
+{% if comic.characters %}
+
+<section class="characters-section">
+
+    <h2>
+        Characters
+    </h2>
+
+    <div class="characters-grid">
+
+        {% for character in comic.characters %}
+
+        <article class="character-card">
+
+            <div class="character-avatar">
+                {{ character.name[0] | upper }}
+            </div>
+
+            <div>
+
+                <h3>
+                    {{ character.name }}
+                </h3>
+
+                <p>
+                    {{ character.description }}
+                </p>
+
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+<section class="comic-page">
+
+    {% for panel in comic.panels %}
+
+    <article
+        class="comic-panel"
+        data-panel="{{ panel.number }}"
+    >
+
+        <div class="panel-header">
+
+            <span>
+                PANEL {{ panel.number }}
+            </span>
+
+            {% if panel.sound_effect %}
+
+            <strong class="sound-effect">
+                {{ panel.sound_effect }}
+            </strong>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="art-placeholder">
+
+            <div class="art-stars">
+                ✦ ✧ ✦
+            </div>
+
+            <div class="art-scene">
+
+                {{ panel.scene }}
+
+            </div>
+
+            <div class="art-style-label">
+
+                {{ comic.art_style }}
+
+            </div>
+
+        </div>
+
+
+        {% if panel.narration %}
+
+        <div class="narration-box">
+
+            {{ panel.narration }}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if panel.dialogue %}
+
+        <div class="speech-area">
+
+            {% for line in panel.dialogue %}
+
+            <div class="speech-bubble">
+
+                <strong>
+                    {{ line.character }}
+                </strong>
+
+                <span>
+                    {{ line.text }}
+                </span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        <details class="art-prompt">
+
+            <summary>
+                View AI Art Prompt
+            </summary>
+
+            <p>
+                {{ panel.art_prompt }}
+            </p>
+
+        </details>
+
+    </article>
+
+    {% endfor %}
+
+</section>
+
+
+<section class="feedback-card">
+
+    <h2>
+        Improve Your Comic
+    </h2>
+
+    <p>
+        Tell ComicCraft what you would like to change.
+    </p>
+
+
+    <form
+        id="feedback-form"
+        data-comic-id="{{ comic_id }}"
+    >
+
+        <textarea
+            id="feedback"
+            name="feedback"
+            rows="4"
+            maxlength="1000"
+            placeholder="Example: Make the ending more exciting and give the hero a funnier line."
+            required
+        ></textarea>
+
+
+        <button
+            type="submit"
+            class="primary-button"
+        >
+            Improve Comic
+        </button>
+
+    </form>
+
+
+    <div
+        id="feedback-status"
+        class="status-message"
+    ></div>
+
+</section>
+
+
+<section class="center-actions">
+
+    <a
+        href="/"
+        class="primary-button"
+    >
+        Create Another Comic
+    </a>
+
+    <a
+        href="/history"
+        class="secondary-button"
+    >
+        View History
+    </a>
+
+</section>
+
+{% endblock %}
